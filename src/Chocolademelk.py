@@ -6,6 +6,7 @@ class Chocolademelk:
 
     def __init__(self):
         pass
+
     ## functionaliteit
     def addChocoladeshot(self, chocoladeshotStock, chocoladeshot):
         """
@@ -26,7 +27,7 @@ class Chocolademelk:
     def addHoning(self, honingStock, honing):
         """
         Adds a honing to chocolademelk
-        Precondition : stock not 0
+        Precondition : stock not <0
         postconditie : price +0.50 EUR
         :param honingStock: integer expressing stock
         :param honing: class
