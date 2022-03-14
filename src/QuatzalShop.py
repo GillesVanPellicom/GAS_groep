@@ -4,14 +4,14 @@ from Chocolademelk import *
 from Honing import *
 from Marshmallow import *
 from Chilipeper import *
-from Gebruiker import *
+#from Gebruiker import *
 from Stock import *
 from Werknemer import *
-from Bestelling import *
+#from Bestelling import *
 ## Data
 Time = 0
 Stock = Stocks()
-
+users = []
 ###
 debugPrint = False # if true, print debug info in console
 ###
@@ -117,6 +117,7 @@ for line in input:
                     voornaam = words[i + 1]
                     achternaam = words[i + 2]
                     email = words[i + 3]
+                    users.append(email)
                     if "#" in voornaam or "#" in achternaam or "#" in email:
                         print("Error: incorrect command at line: ", line)
 
