@@ -126,4 +126,4 @@ class Gebruiker:
 
 G = Gebruiker()
 #print(G.addGebruiker())
-#print(users)
+
