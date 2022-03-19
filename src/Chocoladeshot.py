@@ -6,6 +6,7 @@ class ChocoladeshotType(Enum):
     MELK = 2
     BRUIN = 3
     ZWART = 4
+
 class Chocoladeshot:
     # ADT Chocolademelk
     # data
@@ -13,7 +14,11 @@ class Chocoladeshot:
     prijs = 2  # Price in eur
     chocoladetype = None # Type of chocolate. Use enum ChocoladeshotType
 
-    def __init__(self):
-        pass
+    def __init__(self, ID, type, vervalJaar, vervalMaand, vervalDag):
+        self.id = ID
+        self.chocoladetype = type
+        self.jaar = vervalJaar
+        self.maand = vervalMaand
+        self.daag = vervalDag
 
 

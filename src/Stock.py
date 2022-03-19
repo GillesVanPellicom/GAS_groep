@@ -3,110 +3,174 @@ zal de stocks aanmaken en bijhouden van alle ingredienten
 """
 
 # ADT Stocks
+from CirculaireDubbelgelinkteKetting import *
+from Chocoladeshot import *
+from Honing import *
+from Marshmallow import *
+from Chilipeper import *
 ## data
-stock_chocoladeshot = None
-stock_honing = None
-stock_marshmallow = None
-stock_chilipeper = None
-
 
 ### functionaliteit
 class Stocks:
     def __init__(self):
-        pass
+        self.chocoladeshot = LinkedChain()
+        self.totalChocShot = 0  # totaal aantal chocolade shots (gaat nooit naar beneden), wordt gebruikt voor het geven
+                                # van een ID aan de chocoladeshot instantie
+        self.honing = LinkedChain()
+        self.totalHoning = 0
+        self.marshmallow = LinkedChain()
+        self.totalMarsh = 0
+        self.chilipeper = LinkedChain()
+        self.totalChili = 0
 
-    def nieuwelading_chocoladeshot(self, stock_chocoladeshot):
+    def add_chocoladeshot(self, soort, aantal, jaar, maand, dag):
         """
         voeg extra stock toe aan de chocoladeshots
 
-        preconditie : stock_chocoladeshot is een integer die de hoeveelheid stock voorsteld van de chocoladeshots
-        postconditie : stock_chocoladeshot is verhoogt
+        preconditie :
+        postconditie : een instantie van Chocoladeshot is toegevoegd aan zijn stock
 
-        :param: stock_chocoladeshot is een integer die de hoeveelheid stock voorsteld van de chocoladeshots
+        :param: soort = 0 (= "Wit"), = 1 (= "Melk"), = 2 (= "Bruin"), = 3 (= "Zwart")
+                aantal = aantal toegevoegde stock
+                jaar, maand, dag = vervaldatum.
 
-        :return: geeft niets terug
+        :return: bool: true als gelukt, false als mislukt
         """
-        pass
+        for i in range(aantal):
+            chocShot = Chocoladeshot(self.totalChocShot, soort, jaar, maand, dag)
+            self.chocoladeshot.insert(1, chocShot)
+            self.totalChocShot += 1
+        return True
 
-    def nieuwelading_honing(self):
+    def use_chocoladeshot(self, soort):
         """
-        voeg extra stock toe aan de honing
+        gebruik een instantie van de chocoladestock
 
-        preconditie : stock_honing is een integer die de hoeveelheid stock voorsteld van de honing
-        postconditie : stock_honing is verhoogt
+        preconditie : er bestaat stock van chocoladeshot
+        postconditie : een instantie van Chocoladeshot is verwijderd van zijn stock
 
-        :param: stock_honinh is een integer die de hoeveelheid stock voorsteld van de honinh
-
-        :return: geeft niets terug
+        :param soort: = 0 (= "Wit"), = 1 (= "Melk"), = 2 (= "Bruin"), = 3 (= "Zwart")
+        :return: bool, true als gelukt, false als mislukt
         """
-        pass
+        if self.chocoladeshot.isEmpty() == False:
+            for i in range(1, self.chocoladeshot.getLength()+1):
+                # zoek een chocoladeshot instantie met de correcte soort
+                if (self.chocoladeshot.retrieve(i)[0].chocoladetype == soort):
+                    if self.chocoladeshot.delete(1) == False:
+                        return False
+                    return True
+            return False
+        else:
+            return False
 
-    def nieuwelading_marshmallow(self):
+    def add_honing(self, aantal, jaar, maand, dag):
         """
-        voeg extra stock toe aan de marshmallow
+        voeg extra stock toe aan de HoningStock
 
-        preconditie : stock_marshmallow is een integer die de hoeveelheid stock voorsteld van de marshmallows
-        postconditie : stock_marshmallow is verhoogt
+        preconditie :
+        postconditie : een instantie van Honing is toegevoegd aan zijn stock
 
-        :param: stock_marshmallow is een integer die de hoeveelheid stock voorsteld van de marshmallows
+        :param: aantal = aantal toegevoegde stock
+                jaar, maand, dag = vervaldatum.
 
-        :return: geeft niets terug
+        :return: bool: true als gelukt, false als mislukt
         """
-        pass
+        for i in range(aantal):
+            hon = Honing(self.totalHoning, jaar, maand, dag)
+            self.honing.insert(1, hon)
+            self.totalHoning += 1
+        return True
 
-    def nieuwelading_chilipeper(self):
+    def use_honing(self):
         """
-        voeg extra stock toe aan de chilipeper
+        gebruik een instantie van de honingstock
 
-        preconditie : stock_chilipeper is een integer die de hoeveelheid stock voorsteld van de chilipepers
-        postconditie : stock_chilipeper is verhoogt
+        preconditie : er bestaat stock van honingstock
+        postconditie : een instantie van Honing is verwijderd van zijn stock
 
-        :param: stock_marshmallow is een integer die de hoeveelheid stock voorsteld van de chilipepers
-
-        :return: geeft niets terug
+        :param:
+        :return: bool, true als gelukt, false als mislukt
         """
-        pass
+        if self.honing.isEmpty() == False:
+            if self.honing.delete(1) == False:
+                return False
+            return True
+        else:
+            return False
 
-    def verlaag_chocoladeshot(self, aantal = 1):
+    def add_marshmallow(self, aantal, jaar, maand, dag):
         """
-        verlaagd de stock van de chocoladeshot met aantal (indien niet gespecifieerd 1)
+        voeg extra stock toe aan de marshmallowStock
 
-        preconditie : er is nog stock
-        postconditie : de stock is verlaagd
+        preconditie :
+        postconditie : een instantie van marshmallow is toegevoegd aan zijn stock
 
-        :return:
+        :param: aantal = aantal toegevoegde stock
+                jaar, maand, dag = vervaldatum.
+
+        :return: bool: true als gelukt, false als mislukt
         """
-        pass
+        for i in range(aantal):
+            marsh = Marshmallow(self.totalMarsh, jaar, maand, dag)
+            self.marshmallow.insert(1, marsh)
+            self.totalMarsh += 1
+        return True
 
-    def verlaag_honing(self, aantal = 1):
+    def use_marshmallow(self):
         """
-        verlaagd de stock van de honing met aantal (indien niet gespecifieerd 1)
+        gebruik een instantie van de marshmallowstock
 
-        preconditie : er is nog stock
-        postconditie : de stock is verlaagd
+        preconditie : er bestaat stock van marshmallowstock
+        postconditie : een instantie van marshmallow is verwijderd van zijn stock
 
-        :return:
+        :param:
+        :return: bool, true als gelukt, false als mislukt
         """
-        pass
+        if self.marshmallow.isEmpty() == False:
+            if self.marshmallow.delete(1) == False:
+                return False
+            return True
+        else:
+            return False
 
-    def verlaag_marshmallow(self, aantal = 1):
+    def add_chilipeper(self, aantal, jaar, maand, dag):
         """
-        verlaagd de stock van de marshmallows met aantal (indien niet gespecifieerd 1)
+        voeg extra stock toe aan de chilipeperStock
 
-        preconditie : er is nog stock
-        postconditie : de stock is verlaagd
+        preconditie :
+        postconditie : een instantie van chilipeper is toegevoegd aan zijn stock
 
-        :return:
+        :param: aantal = aantal toegevoegde stock
+                jaar, maand, dag = vervaldatum.
+
+        :return: bool: true als gelukt, false als mislukt
         """
-        pass
+        for i in range(aantal):
+            chili = Chilipeper(self.totalChili, jaar, maand, dag)
+            self.chilipeper.insert(1, chili)
+            self.totalChili += 1
+        return True
 
-    def verlaag_chilipeper(self, aantal = 1):
+    def use_chilipeper(self):
         """
-        verlaagd de stock van de chilipepers met aantal (indien niet gespecifieerd 1)
+        gebruik een instantie van de honingstock
 
-        preconditie : er is nog stock
-        postconditie : de stock is verlaagd
+        preconditie : er bestaat stock van honingstock
+        postconditie : een instantie van Honing is verwijderd van zijn stock
 
-        :return:
+        :param:
+        :return: bool, true als gelukt, false als mislukt
         """
-        pass
+        if self.chilipeper.isEmpty() == False:
+            if self.chilipeper.delete(1) == False:
+                return False
+            return True
+        else:
+            return False
+
+
+if __name__ == "__main__":
+    s = Stocks()
+    s.add_chilipeper(1,2022,10,26)
+    print(s.use_chilipeper())
+    print()
