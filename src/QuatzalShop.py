@@ -8,20 +8,84 @@ from Chilipeper import *
 from Stock import *
 from Werknemer import *
 #from Bestelling import *
+from CirculaireDubbelgelinkteKetting import *
 ## Data
 Time = 0
 Stock = Stocks()
-users = []
+users = LinkedChain()
 ###
 debugPrint = False # if true, print debug info in console
 ###
 
+logColums = LinkedChain()
 
 ### functionaliteit
 
+def startOutputLogString():
+    logStartStr = """<html>
+    <head>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table, td, th {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+    <body>
+        <h1>Log</h1>
+        <table>
+            <thead>
+                <td>tijdstip</td>
+                <td>Stack</td>
+    """
+    for i in range(users.getLength()):
+        logStartStr += """
+                    <td>naam</td>"""
+    logStartStr += """
+                <td>Nieuwe bestellingen</td>
+                <td>Wachtende bestellingen</td>
+                <td>wit</td>
+                <td>melk</td>
+                <td>bruin</td>
+                <td>zwart</td>
+                <td>honing</td>
+                <td>marshmallow</td>
+                <td>chili</td>
+            </thead>
+            <tbody>"""
+
+    logColums.insert(1, logStartStr)
+
+def writeColumn():
+    column = """
+                <tr>
+                    <td>""" + str(Time) + """</td>
+                    <td> """ + "|" + "CREDITS" + "</td>"""
+
+    for u in range(users.getLength()):
+        column += """
+                    <td>""" + "CREDITS v/d BESTELLING" + "</td>"
+
+    column += """
+                    <td>""" + "CREDITS van NIEUWE BESTELLINGEN" + """</td>
+                    <td>""" + "CREDITS van WACHTENDE BESTELLINGEN" + """</td>
+                    <td>""" + str(Stock.getAmountChocoladeshotWit()) + """</td>
+                    <td>""" + str(Stock.getAmountChocoladeshotMelk()) + """</td>
+                    <td>""" + str(Stock.getAmountChocoladeshotBruin()) + """</td>
+                    <td>""" + str(Stock.getAmountChocoladeshotZwart()) + """</td>
+                    <td>""" + str(Stock.getAmountHoning()) + """</td>
+                    <td>""" + str(Stock.getAmountMarshmallow()) + """</td>
+                    <td>""" + str(Stock.getAmountChilipeper()) + """</td>
+                </tr>"""
+
+    logColums.insert(logColums.getLength()+1, column)
+
 def TimeUpdate():   # update everything (called when time is changed)
     # for example: update werknemers (finish order, credits back on stack, ...)
-    pass
+    writeColumn()
 
 # read input file:
 input = open("input")
@@ -39,7 +103,9 @@ for line in input:
             break
         elif word == "start":
             if (debugPrint):
-                print()
+                print("Start")
+            startOutputLogString()
+            writeColumn()
             init = False
             gestart = True
             break
@@ -70,7 +136,7 @@ for line in input:
 
                     if debugPrint:
                         print("add stock of shot:\t", soort, aantal, "\tvervaldatum: ----", jaar, maand, dag)
-                    #Stock.add_chocoladeshot(soort, aantal, jaar, maand, dag)
+                    Stock.add_chocoladeshot(soort, aantal, jaar, maand, dag)
                 else:
                     print("Error: incorrect command at line: ", line)
             elif word == "honing":
@@ -82,7 +148,7 @@ for line in input:
 
                     if debugPrint:
                         print("add stock of honing:", aantal, "\tvervaldatum: ----", jaar, maand, dag)
-                    #Stock.add_honing(aantal, dag, maand, jaar)
+                    Stock.add_honing(aantal, dag, maand, jaar)
 
                 else:
                     print("Error: incorrect command at line: ", line)
@@ -95,7 +161,7 @@ for line in input:
 
                     if debugPrint:
                         print("add stock of MM:\t", aantal, "\tvervaldatum: ----", jaar, maand, dag)
-                    #Stock.add_marshmallow(aantal, dag, maand, jaar)
+                    Stock.add_marshmallow(aantal, dag, maand, jaar)
 
                 else:
                     print("Error: incorrect command at line: ", line)
@@ -108,7 +174,7 @@ for line in input:
 
                     if debugPrint:
                         print("add stock of chili:\t", aantal, "\tvervaldatum: ----", jaar, maand, dag)
-                    #Stock.add_chilipeper(aantal, dag, maand, jaar)
+                    Stock.add_chilipeper(aantal, dag, maand, jaar)
 
                 else:
                     print("Error: incorrect command at line: ", line)
@@ -117,7 +183,7 @@ for line in input:
                     voornaam = words[i + 1]
                     achternaam = words[i + 2]
                     email = words[i + 3]
-                    users.append(email)
+                    users.insert(1, email)
                     if "#" in voornaam or "#" in achternaam or "#" in email:
                         print("Error: incorrect command at line: ", line)
 
@@ -253,9 +319,15 @@ for line in input:
                             print("Error: incorrect command at line: ", line)
 
                 elif word == "log":
-                    if debugPrint:
-                        print("\tKeyword: log.", "Create output HTML file")
-                    pass
+                    # output
+                    log = open("log"+str(Time)+".html", "w")
+                    for i in range(1,logColums.getLength()+1):
+                        log.write(logColums.retrieve(i)[0])
+                    log.write("""
+		</table>
+	</body>
+</html>""")
+                    log.close()
             else:
                 print("Error: incorrect time at instruction: ", line)
             break

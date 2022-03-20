@@ -23,6 +23,41 @@ class Stocks:
         self.chilipeper = LinkedChain()
         self.totalChili = 0
 
+    def getAmountHoning(self):
+        return self.honing.getLength()
+    def getAmountMarshmallow(self):
+        return self.marshmallow.getLength()
+    def getAmountChilipeper(self):
+        return self.chilipeper.getLength()
+    def getAmountChocoladeshotWit(self):
+        amount = 0
+        for i in range(1, self.chocoladeshot.getLength()+1):
+            shot = self.chocoladeshot.retrieve(i)[0]
+            if shot.chocoladetype == 0:
+                amount+=1
+        return amount
+    def getAmountChocoladeshotMelk(self):
+        amount = 0
+        for i in range(1, self.chocoladeshot.getLength()+1):
+            shot = self.chocoladeshot.retrieve(i)[0]
+            if shot.chocoladetype == 1:
+                amount+=1
+        return amount
+    def getAmountChocoladeshotBruin(self):
+        amount = 0
+        for i in range(1, self.chocoladeshot.getLength()+1):
+            shot = self.chocoladeshot.retrieve(i)[0]
+            if shot.chocoladetype == 2:
+                amount+=1
+        return amount
+    def getAmountChocoladeshotZwart(self):
+        amount = 0
+        for i in range(1, self.chocoladeshot.getLength()+1):
+            shot = self.chocoladeshot.retrieve(i)[0]
+            if shot.chocoladetype == 3:
+                amount+=1
+        return amount
+
     def add_chocoladeshot(self, soort, aantal, jaar, maand, dag):
         """
         voeg extra stock toe aan de chocoladeshots
