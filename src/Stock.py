@@ -3,209 +3,413 @@ zal de stocks aanmaken en bijhouden van alle ingredienten
 """
 
 # ADT Stocks
-from CirculaireDubbelgelinkteKetting import *
+from src.wrappers.MasterWrapper import *
 from Chocoladeshot import *
 from Honing import *
 from Marshmallow import *
 from Chilipeper import *
+
+
 ## data
 
 ### functionaliteit
 class Stocks:
+    marshmallow = None
+    totalMarsh = None
+    honing = None
+    totalHoning = None
+    chilipeper = None
+    totalChili = None
+    chocoladeshot = None
+    totalChocShot = None
+
+    jaar = 2022
+    maand = 3
+    dag = 29
+
     def __init__(self):
-        self.chocoladeshot = LinkedChain()
+        self.chocoladeshot = MasterWrapper()
         self.totalChocShot = 0  # totaal aantal chocolade shots (gaat nooit naar beneden), wordt gebruikt voor het geven
-                                # van een ID aan de chocoladeshot instantie
-        self.honing = LinkedChain()
+        # van een ID aan de chocoladeshot instantie
+        self.honing = MasterWrapper()
         self.totalHoning = 0
-        self.marshmallow = LinkedChain()
+        self.marshmallow = MasterWrapper()
         self.totalMarsh = 0
-        self.chilipeper = LinkedChain()
+        self.chilipeper = MasterWrapper()
         self.totalChili = 0
 
+    """
+    Returns amount left in stock of Honing
+
+    Precondition: stock is not empty
+    Postcondition: N/A
+
+    @rtype: int
+    @returns: amount
+    """
     def getAmountHoning(self):
-        return self.honing.getLength()
+        return self.honing.tableLength()
+
+    """
+    Returns amount left in stock of Marshmallow
+
+    Precondition: stock is not empty
+    Postcondition: N/A
+
+    @rtype: int
+    @returns: amount
+    """
     def getAmountMarshmallow(self):
-        return self.marshmallow.getLength()
+        return self.marshmallow.tableLength()
+
+    """
+    Returns amount left in stock of Chilipeper
+
+    Precondition: stock is not empty
+    Postcondition: N/A
+
+    @rtype: int
+    @returns: amount
+    """
     def getAmountChilipeper(self):
-        return self.chilipeper.getLength()
+        return self.chilipeper.tableLength()
+
+    """
+    Returns amount left in stock of ChocoladeShotWit
+
+    Precondition: stock is not empty
+    Postcondition: N/A
+
+    @rtype: int
+    @returns: amount
+    """
     def getAmountChocoladeshotWit(self):
         amount = 0
-        for i in range(1, self.chocoladeshot.getLength()+1):
-            shot = self.chocoladeshot.retrieve(i)[0]
+        for i in range(self.chocoladeshot.tableLength()):
+            shot = self.chocoladeshot.tableRetrieve(i)[0]
             if shot.chocoladetype == 0:
-                amount+=1
+                amount += 1
         return amount
+
+    """
+    Returns amount left in stock of ChocoladeShotMelk
+
+    Precondition: stock is not empty
+    Postcondition: N/A
+
+    @rtype: int
+    @returns: amount
+    """
     def getAmountChocoladeshotMelk(self):
         amount = 0
-        for i in range(1, self.chocoladeshot.getLength()+1):
-            shot = self.chocoladeshot.retrieve(i)[0]
+        for i in range(self.chocoladeshot.tableLength()):
+            shot = self.chocoladeshot.tableRetrieve(i)[0]
             if shot.chocoladetype == 1:
-                amount+=1
+                amount += 1
         return amount
+
+    """
+    Returns amount left in stock of ChocoladeShotBruin
+
+    Precondition: stock is not empty
+    Postcondition: N/A
+
+    @rtype: int
+    @returns: amount
+    """
     def getAmountChocoladeshotBruin(self):
         amount = 0
-        for i in range(1, self.chocoladeshot.getLength()+1):
-            shot = self.chocoladeshot.retrieve(i)[0]
+        for i in range(self.chocoladeshot.tableLength()):
+            shot = self.chocoladeshot.tableRetrieve(i)[0]
             if shot.chocoladetype == 2:
-                amount+=1
+                amount += 1
         return amount
+
+    """
+    Returns amount left in stock of ChocoladeShotZwart
+
+    Precondition: stock is not empty
+    Postcondition: N/A
+
+    @rtype: int
+    @returns: amount
+    """
     def getAmountChocoladeshotZwart(self):
         amount = 0
-        for i in range(1, self.chocoladeshot.getLength()+1):
-            shot = self.chocoladeshot.retrieve(i)[0]
+        for i in range(self.chocoladeshot.tableLength()):
+            shot = self.chocoladeshot.tableRetrieve(i)[0]
             if shot.chocoladetype == 3:
-                amount+=1
+                amount += 1
         return amount
 
+    """
+    Adds chocoladeshot to stock
+
+    Precondition: stock is initialized
+    Postcondition: chocoladeshot stock +x
+
+    @type soort: int
+    @param soort: type chocoladeshot
+    @type aantal: int
+    @param aantal: hoeveelheid
+    @type jaar: int
+    @param jaar: vervaljaar
+    @type maand: int
+    @param maand: vervalmaand
+    @type dag: int
+    @param dag: vervaldag
+
+
+    @rtype: boolean
+    @returns: True if success
+    """
     def add_chocoladeshot(self, soort, aantal, jaar, maand, dag):
-        """
-        voeg extra stock toe aan de chocoladeshots
 
-        preconditie :
-        postconditie : een instantie van Chocoladeshot is toegevoegd aan zijn stock
-
-        :param: soort = 0 (= "Wit"), = 1 (= "Melk"), = 2 (= "Bruin"), = 3 (= "Zwart")
-                aantal = aantal toegevoegde stock
-                jaar, maand, dag = vervaldatum.
-
-        :return: bool: true als gelukt, false als mislukt
-        """
         for i in range(aantal):
             chocShot = Chocoladeshot(self.totalChocShot, soort, jaar, maand, dag)
-            self.chocoladeshot.insert(1, chocShot)
+            self.chocoladeshot.tableInsert(chocShot)
             self.totalChocShot += 1
         return True
 
+    """
+    Uses one chocoladeshot
+
+    Precondition: stock is not empty
+    Postcondition: chocoladeshot stock -1
+    
+    @type soort: int
+    @param sorot: type of chocoladeshot
+
+    @rtype: Chocoladeshot
+    @returns: object taken out of the stock
+    """
     def use_chocoladeshot(self, soort):
-        """
-        gebruik een instantie van de chocoladestock
 
-        preconditie : er bestaat stock van chocoladeshot
-        postconditie : een instantie van Chocoladeshot is verwijderd van zijn stock
+        # haal eerst de vervallen instanties eruit
+        for i in range(self.chocoladeshot.tableLength(), 0, -1):
+            tmp = self.chocoladeshot.tableRetrieve(i - 1)[0]
+            if tmp.jaar >= self.jaar:
+                continue
+            if tmp.maand >= self.maand:
+                continue
+            if tmp.dag >= self.dag:
+                continue
+            self.chocoladeshot.tableDelete(i - 1)
 
-        :param soort: = 0 (= "Wit"), = 1 (= "Melk"), = 2 (= "Bruin"), = 3 (= "Zwart")
-        :return: bool, true als gelukt, false als mislukt
-        """
-        if self.chocoladeshot.isEmpty() == False:
-            for i in range(1, self.chocoladeshot.getLength()+1):
+        # use
+        if self.chocoladeshot.tableIsEmpty() == False:
+            for i in range(self.chocoladeshot.tableLength()):
                 # zoek een chocoladeshot instantie met de correcte soort
-                if (self.chocoladeshot.retrieve(i)[0].chocoladetype == soort):
-                    if self.chocoladeshot.delete(1) == False:
-                        return False
-                    return True
-            return False
+                if self.chocoladeshot.tableRetrieve(i)[0] == None:
+                    return None
+                if (self.chocoladeshot.tableRetrieve(i)[0].chocoladetype == soort):
+                    instance = self.chocoladeshot.tableRetrieve(i)[0]
+                    self.chocoladeshot.tableDelete(i)
+                    return instance
+            return None
         else:
-            return False
+            return None
 
+    """
+    Adds honing to stock
+
+    Precondition: stock is initialized
+    Postcondition: honing stock +x
+
+    @type aantal: int
+    @param aantal: hoeveelheid
+    @type jaar: int
+    @param jaar: vervaljaar
+    @type maand: int
+    @param maand: vervalmaand
+    @type dag: int
+    @param dag: vervaldag
+
+
+    @rtype: boolean
+    @returns: True if success
+    """
     def add_honing(self, aantal, jaar, maand, dag):
-        """
-        voeg extra stock toe aan de HoningStock
 
-        preconditie :
-        postconditie : een instantie van Honing is toegevoegd aan zijn stock
-
-        :param: aantal = aantal toegevoegde stock
-                jaar, maand, dag = vervaldatum.
-
-        :return: bool: true als gelukt, false als mislukt
-        """
         for i in range(aantal):
             hon = Honing(self.totalHoning, jaar, maand, dag)
-            self.honing.insert(1, hon)
+            self.honing.tableInsert(hon)
             self.totalHoning += 1
         return True
 
+    """
+    Uses one honing
+
+    Precondition: stock is not empty
+    Postcondition: honing stock -1
+
+    @rtype: Honing
+    @returns: object taken out of the stock
+    """
     def use_honing(self):
-        """
-        gebruik een instantie van de honingstock
 
-        preconditie : er bestaat stock van honingstock
-        postconditie : een instantie van Honing is verwijderd van zijn stock
+        # haal eerst de vervallen instanties eruit
+        for i in range(self.honing.tableLength(), 0, -1):
+            tmp = self.honing.tableRetrieve(i - 1)[0]
+            if tmp.jaar >= self.jaar:
+                continue
+            if tmp.maand >= self.maand:
+                continue
+            if tmp.dag >= self.dag:
+                continue
+            self.honing.tableDelete(i - 1)
 
-        :param:
-        :return: bool, true als gelukt, false als mislukt
-        """
-        if self.honing.isEmpty() == False:
-            if self.honing.delete(1) == False:
-                return False
-            return True
+        # use
+        if not self.honing.tableIsEmpty():
+            if self.honing.tableRetrieve(0)[0] is None:
+                return None
+            instance = self.honing.tableRetrieve(0)[0]
+            self.honing.tableDelete(0)
+            return instance
         else:
-            return False
+            return None
 
+    """
+    Adds marshmallow to stock
+
+    Precondition: stock is initialized
+    Postcondition: marshmallow stock +x
+
+    @type aantal: int
+    @param aantal: hoeveelheid
+    @type jaar: int
+    @param jaar: vervaljaar
+    @type maand: int
+    @param maand: vervalmaand
+    @type dag: int
+    @param dag: vervaldag
+
+
+    @rtype: boolean
+    @returns: True if success
+    """
     def add_marshmallow(self, aantal, jaar, maand, dag):
-        """
-        voeg extra stock toe aan de marshmallowStock
 
-        preconditie :
-        postconditie : een instantie van marshmallow is toegevoegd aan zijn stock
-
-        :param: aantal = aantal toegevoegde stock
-                jaar, maand, dag = vervaldatum.
-
-        :return: bool: true als gelukt, false als mislukt
-        """
         for i in range(aantal):
             marsh = Marshmallow(self.totalMarsh, jaar, maand, dag)
-            self.marshmallow.insert(1, marsh)
+            self.marshmallow.tableInsert(marsh)
             self.totalMarsh += 1
         return True
 
+    """
+    Uses one marshmallow
+
+    Precondition: stock is not empty
+    Postcondition: marshmallow stock -1
+
+    @rtype: Marshmallow
+    @returns: object taken out of the stock
+    """
     def use_marshmallow(self):
-        """
-        gebruik een instantie van de marshmallowstock
 
-        preconditie : er bestaat stock van marshmallowstock
-        postconditie : een instantie van marshmallow is verwijderd van zijn stock
+        # haal eerst de vervallen instanties eruit
+        for i in range(self.marshmallow.tableLength(), 0, -1):
+            tmp = self.marshmallow.tableRetrieve(i - 1)[0]
+            if tmp.jaar >= self.jaar:
+                continue
+            if tmp.maand >= self.maand:
+                continue
+            if tmp.dag >= self.dag:
+                continue
+            self.marshmallow.tableDelete(i - 1)
 
-        :param:
-        :return: bool, true als gelukt, false als mislukt
-        """
-        if self.marshmallow.isEmpty() == False:
-            if self.marshmallow.delete(1) == False:
-                return False
-            return True
+        # use
+        if not self.marshmallow.tableIsEmpty():
+            if self.marshmallow.tableRetrieve(0)[0] is None:
+                return None
+            instance = self.marshmallow.tableRetrieve(0)[0]
+            self.marshmallow.tableDelete(0)
+            return instance
         else:
-            return False
+            return None
 
+    """
+    Adds chilipeper to stock
+
+    Precondition: stock is initialized
+    Postcondition: chilipeper stock +x
+
+    @type aantal: int
+    @param aantal: hoeveelheid
+    @type jaar: int
+    @param jaar: vervaljaar
+    @type maand: int
+    @param maand: vervalmaand
+    @type dag: int
+    @param dag: vervaldag
+
+
+    @rtype: boolean
+    @returns: True if success
+    """
     def add_chilipeper(self, aantal, jaar, maand, dag):
-        """
-        voeg extra stock toe aan de chilipeperStock
 
-        preconditie :
-        postconditie : een instantie van chilipeper is toegevoegd aan zijn stock
-
-        :param: aantal = aantal toegevoegde stock
-                jaar, maand, dag = vervaldatum.
-
-        :return: bool: true als gelukt, false als mislukt
-        """
         for i in range(aantal):
             chili = Chilipeper(self.totalChili, jaar, maand, dag)
-            self.chilipeper.insert(1, chili)
+            self.chilipeper.tableInsert(chili)
             self.totalChili += 1
         return True
 
+    """
+    Uses one chilipeper
+
+    Precondition: stock is not empty
+    Postcondition: chilipeper stock -1
+
+    @rtype: chilipeper
+    @returns: object taken out of the stock
+    """
     def use_chilipeper(self):
-        """
-        gebruik een instantie van de honingstock
 
-        preconditie : er bestaat stock van honingstock
-        postconditie : een instantie van Honing is verwijderd van zijn stock
+        # haal eerst de vervallen instanties eruit
+        for i in range(self.chilipeper.tableLength(), 0, -1):
+            tmp = self.chilipeper.tableRetrieve(i - 1)[0]
+            if tmp.jaar >= self.jaar:
+                continue
+            if tmp.maand >= self.maand:
+                continue
+            if tmp.dag >= self.dag:
+                continue
 
-        :param:
-        :return: bool, true als gelukt, false als mislukt
-        """
-        if self.chilipeper.isEmpty() == False:
-            if self.chilipeper.delete(1) == False:
-                return False
-            return True
+            self.chilipeper.tableDelete(i - 1)
+
+        # use
+        if self.chilipeper.tableIsEmpty() == False:
+            if self.chilipeper.tableRetrieve(0)[0] == None:
+                return None
+            instance = self.chilipeper.tableRetrieve(0)[0]
+            self.chilipeper.tableDelete(0)
+            return instance
         else:
-            return False
+            return None
 
 
 if __name__ == "__main__":
     s = Stocks()
-    s.add_chilipeper(1,2022,10,26)
+    print(s.getAmountChocoladeshotBruin())
+    print(s.getAmountChocoladeshotMelk())
+    s.add_chocoladeshot(2, 1, 2022, 3, 29)
+    s.add_chocoladeshot(1, 3, 2022, 3, 28)
+    print(s.getAmountChocoladeshotBruin())
+    print(s.getAmountChocoladeshotMelk())
+    print(s.use_chocoladeshot(2))
+    print(s.use_chocoladeshot(1))
+    print(s.getAmountChocoladeshotBruin())
+    print(s.getAmountChocoladeshotMelk())
+    s.add_chocoladeshot(2, 3, 2021, 3, 29)
+    s.add_chocoladeshot(1, 3, 2022, 2, 28)
+    print(s.getAmountChocoladeshotBruin())
+    print(s.getAmountChocoladeshotMelk())
+    print(s.use_chocoladeshot(2))
+    print(s.use_chocoladeshot(1))
+    print(s.getAmountChocoladeshotBruin())
+    print(s.getAmountChocoladeshotMelk())
+    s.add_chilipeper(1, 2022, 10, 26)
+    s.add_marshmallow(82, 2022, 10, 26)
     print(s.use_chilipeper())
     print()

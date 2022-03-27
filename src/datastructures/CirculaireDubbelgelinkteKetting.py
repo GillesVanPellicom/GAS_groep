@@ -18,6 +18,10 @@ class LinkedChain:
     save, voor inginious
     load  voor inginious
     """
+    curptr = None
+    dummyHead = None
+    nextptr = None
+    length = None
 
     def __init__(self):
         self.dummyHead = ChainItemType("dummyHead", 0, "dummyHead","dummyHead") #dummyHead heeft geen waarde
